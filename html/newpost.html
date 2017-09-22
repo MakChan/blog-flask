@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+ <div class="blog-masthead">
+	      <div class="container">
+	        <!-- Fixed navbar -->
+	        <nav class="navbar navbar-default navbar-fixed-top">
+	          <div class="container">
+	            <div class="navbar-header">
+	              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	                <span class="sr-only">Toggle navigation</span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	              </button>
+	              <a class="navbar-brand" href="/">the<strong>blog</strong></a>
+	            </div>
+	            <div id="navbar" class="navbar-collapse collapse">
+	              
+	              <ul class="nav navbar-nav navbar-right">
+
+	                <li><a href="/user/{{ name }}">{{ name }}</a></li>  	              	
+	                <li><a href="/logout">Log out</a></li>	                
+	              </ul>
+	            </div><!--/.nav-collapse -->
+	          </div>
+	        </nav>
+	      </div>
+	    </div>
+
+
+    <div class="container wrapper">
+
+		<h1 class="new-header">Submit new post</h1>
+
+		
+		<form method="post">
+			<label>
+				<div class="new-label">Subject</div>
+				<input type="text" name="subject" value="{{subject}}">
+			</label>
+
+			<br>
+
+			<label>
+				<div class="new-label">Content</div>
+				<textarea name="content">{{content}}</textarea>
+			</label>
+
+			<div class="error">{{error}}</div>
+
+			<input type="submit">
+
+		</form>
+
+</div>
+{% endblock %}

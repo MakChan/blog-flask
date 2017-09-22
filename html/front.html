@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+ <div class="blog-masthead">
+	      <div class="container">
+	        <!-- Fixed navbar -->
+	        <nav class="navbar navbar-default navbar-fixed-top">
+	          <div class="container">
+	            <div class="navbar-header">
+	              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	                <span class="sr-only">Toggle navigation</span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	              </button>
+	              <a class="navbar-brand" href="/">the<strong>blog</strong></a>
+	            </div>
+	            <div id="navbar" class="navbar-collapse collapse">
+	              
+	              <ul class="nav navbar-nav navbar-right">
+
+	              	{% if logged_in == True %}
+
+	                <li><a href="/newpost">New Post</a></li>
+	                <li><a href="/user/{{ name }}">{{ name }}</a></li>               
+	                <li><a href="/logout">Log out</a></li>	 
+
+	              	{% else %}
+	                <li><a href="/login">Sign In</a></li>
+	                <li><a href="/signup">Sign Up <span class="sr-only">(current)</span></a></li>
+	              	{% endif %}
+
+	              </ul>
+	            </div><!--/.nav-collapse -->
+	          </div>
+	        </nav>
+	      </div>
+	    </div>
+
+
+
+    <div class="container wrapper">
+
+    <div class="row">
+
+        <div class="col-sm-8 blog-main">
+
+			{% for post in posts %}
+				<div class="blog-post">
+					<h2 class="blog-post-title">{{post.subject}}
+					<a href="/post/{{post.permalink}}"> <i class="material-icons">open_in_new</i></a>	</h2>
+
+					<div class="blog-post-meta">{{post.created|datetimeformat}}  by 
+						<a href="/user/{{post.author}}"> {{post.author}} </a></div>
+					<pre>{{post.content}}</pre>
+			
+				</div>
+			{% endfor %}
+
+{#	          <nav>
+	            <ul class="pager">
+	            {% if page_no > 0 %}
+	                <li><a href="/{{ page_no|decrement }}">Previous</a></li>	            
+	            {% endif %}  
+
+	            {% if next_true == True %}
+	              <li><a href="/{{ page_no|increment }}">Next</a></li>
+	            {% endif %} 	              
+	            </ul>
+	          </nav> #}
+
+         </div>
+
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+            <div class="sidebar-module sidebar-module-inset">
+	            <h4>About</h4>
+	            <p>A free space to post your views on ongoing events and other things that you wish to share.</p>				
+            </div>
+        </div>
+    </div>
+    </div>
+	</div>
+{% endblock %}
