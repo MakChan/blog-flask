@@ -21,17 +21,8 @@
 	              
 	              <ul class="nav navbar-nav navbar-right">
 
-	              	{% if logged_in == True %}
-
-	                <li><a href="/newpost">New Post</a></li>
-	                <li><a class="active" href="">{{ name }}</a></li>               
-	                <li><a href="/logout">Log out</a></li>	 
-
-	              	{% else %}
 	                <li><a href="/login">Sign In</a></li>
-	                <li><a href="/signup">Sign Up <span class="sr-only">(current)</span></a></li>
-	              	{% endif %}
-
+                
 	              </ul>
 	            </div><!--/.nav-collapse -->
 	          </div>
@@ -39,39 +30,51 @@
 	      </div>
 	    </div>
 
-    <div class="blog-header">
-      <div class="container">
-        <h1 class="blog-title">{{ author }}</h1>
-        <p class="lead blog-description">all posts of {{author}}</p>
-      </div>
-    </div>
+
+
+
 
 
 
 
     <div class="container wrapper">
 
-    <div class="row">
 
-        <div class="col-sm-8 blog-main">
-			{% for post in posts %}
-				<div class="blog-post">
-					<h2 class="blog-post-title">{{post.subject}}</h2>
-					<div class="blog-post-meta">{{post.created|datetimeformat}}</div>		
-					<pre>{{post.content}}</pre>
+		<form method = "post">
+			<b>Signup</b><br><br>
+
+			<label> Full Name
+				<input type="text" name="fullname" value="{{fullname}}">
+			</label>
+			<div style="color:red">{{error_name}}</div>
+
+			<label> Username
+				<input type="text" name="username" value="{{username}}">
+			</label>
+			<div style="color:red">{{error_user}}</div>
 			
-				</div>
-			{% endfor %}
 
-	          <nav>
-	            <ul class="pager">
-	              <li><a href="#">Previous</a></li>
-	              <li><a href="#">Next</a></li>
-	            </ul>
-	          </nav>
+			<label> Password
+				<input type="password" name="password"> 
+			</label>
+			<div style="color:red">{{error_pass}}</div>
+			
 
-         </div>
+			<label> Verify Password
+				<input type="password" name="verify"> 
+			</label>
+			<div style="color:red">{{error_verify}}</div>
+			
 
-    </div>
-    </div>
+			<label> Email (Optional)
+				<input type="text" name="email" value="{{email}}"> 
+			</label>
+			<div style="color:red">{{error_email}}</div>
+			
+
+
+			<br>
+			<input type="submit" value="Submit" >
+		</form>
+</div>
 {% endblock %}

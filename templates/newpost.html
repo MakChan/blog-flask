@@ -21,8 +21,8 @@
 	              
 	              <ul class="nav navbar-nav navbar-right">
 
-	                <li><a href="/login">Sign In</a></li>
-                
+	                <li><a href="{{  url_for('userPage', username=user.username) }}">{{ user.fullname }}</a></li> 	              	
+	                <li><a href="/logout">Log out</a></li>	                
 	              </ul>
 	            </div><!--/.nav-collapse -->
 	          </div>
@@ -31,45 +31,29 @@
 	    </div>
 
 
-
-
-
-
-
-
     <div class="container wrapper">
 
+		<h1 class="new-header">Submit new post</h1>
 
-		<form method = "post">
-			<b>Signup</b><br><br>
-
-			<label> Username
-				<input type="text" name="username" value="{{username}}">
+		
+		<form method="post">
+			<label>
+				<div class="new-label">Subject</div>
+				<input type="text" name="subject" value="{{subject}}">
 			</label>
-			<div style="color:red">{{error_user}}</div>
-			
-
-			<label> Password
-				<input type="password" name="password"> 
-			</label>
-			<div style="color:red">{{error_pass}}</div>
-			
-
-			<label> Verify Password
-				<input type="password" name="verify"> 
-			</label>
-			<div style="color:red">{{error_verify}}</div>
-			
-
-			<label> Email (Optional)
-				<input type="text" name="email" value="{{email}}"> 
-			</label>
-			<div style="color:red">{{error_email}}</div>
-			
-
 
 			<br>
-			<input type="submit" >
+
+			<label>
+				<div class="new-label">Content</div>
+				<textarea name="content">{{content}}</textarea>
+			</label>
+
+			<div class="error">{{error}}</div>
+
+			<input type="submit" value="Submit">
+
 		</form>
+
 </div>
 {% endblock %}

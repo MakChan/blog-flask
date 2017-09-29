@@ -3,7 +3,6 @@
 
 {% block content %}
 
-
  <div class="blog-masthead">
 	      <div class="container">
 	        <!-- Fixed navbar -->
@@ -21,17 +20,9 @@
 	            <div id="navbar" class="navbar-collapse collapse">
 	              
 	              <ul class="nav navbar-nav navbar-right">
-	              	{% if logged_in == True %}
 
-	                <li><a href="/newpost">New Post</a></li>
-	                <li><a href="/user/{{ name }}">{{ name }}</a></li>  	                
-	                <li><a href="/logout">Log out</a></li>	 
-
-	              	{% else %}
-	                <li><a href="/login">Sign In</a></li>
 	                <li><a href="/signup">Sign Up <span class="sr-only">(current)</span></a></li>
-	              	{% endif %}
-	                
+            
 	              </ul>
 	            </div><!--/.nav-collapse -->
 	          </div>
@@ -40,14 +31,31 @@
 	    </div>
 
 
+
     <div class="container wrapper">
 
-			<div class="blog-post">
-				<h2 class="blog-post-title">{{post.subject}}</h2>									
-				<p>{{post.content}}</p>
-				<div class="blog-post-meta">{{post.created|datetimeformat}}</div>
-			</div>
+
+		<form method = "post">
+			<b>Login</b><br><br>
+
+			<label> Username
+				<input type="text" name="username" value="{{username}}">
+			</label>
+			<div style="color:red">{{error_user}}</div>
+			
+
+			<label> Password
+				<input type="password" name="password"> 
+			</label>
+			<div style="color:red">{{error_pass}}</div>
 
 
+
+			<br>
+			<div style="color:red">{{error_verify}}</div>
+
+			<br>
+			<input type="submit" value="Submit" >
+		</form>
 </div>
 {% endblock %}
