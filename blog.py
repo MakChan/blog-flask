@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import random, re, hashlib, os
-from string import ascii_letters
+from string import letters
 
 app = Flask(__name__)
 app.debug = True
