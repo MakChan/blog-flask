@@ -22,7 +22,7 @@ class User(db.Model):
     username = db.Column(db.String, unique=True)
     fullname = db.Column(db.String, nullable=True)   
     password = db.Column(db.String) 
-    email = db.Column(db.String,  nullable=True)       
+    email = db.Column(db.String,  nullable=True, unique=True)       
 
 
 class Post(db.Model):
@@ -32,9 +32,7 @@ class Post(db.Model):
     subject = db.Column(db.String)
     content = db.Column(db.String)
     time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    author = db.Column(db.String, db.ForeignKey('user.username'))
-
-    user = db.relationship(User) 
+    author = db.Column(db.String)
 
 
     # We added this serialize function to be able to send JSON objects in a
