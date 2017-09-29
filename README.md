@@ -49,10 +49,10 @@ Follow this guide to setup this project on your local machine.
 
 
 ### Roadmap :rocket:
-:x: Admin panel    
-:x: Edit posts
-:x: Hashtags 
-:x: Comments  
-:x: Upvote/Downvote
-:x: Follow other users
-:x: Personalised feeds
+* Admin panel    
+* Edit posts
+* Hashtags 
+* Comments  
+* Upvote/Downvote
+* Follow other users
+* Personalised feeds

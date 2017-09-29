@@ -1,18 +1,20 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-import random, re, hashlib
-from string import letters
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import random, re, hashlib, os
+from string import ascii_letters
 
 app = Flask(__name__)
 app.debug = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+
+if os.environ.get('DATABASE_URL') is None:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_ECHO'] = True
+
 db = SQLAlchemy(app)
-
-
-
 class User(db.Model):
     __tablename__ = 'user'
 
@@ -271,5 +273,4 @@ def userPage(username, page=1):
 
 if __name__ == '__main__':
 	app.secret_key = 'super_secret_key'
-	app.debug = True
-app.run(host='0.0.0.0', port=5000)
+	app.run(debug=True)
