@@ -1,54 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-import random, re, hashlib, os
+from app import app
+from flask import render_template, request, redirect, url_for, jsonify
+import random, re, hashlib
 from string import letters
-
-app = Flask(__name__)
-app.debug = True
-
-if os.environ.get('DATABASE_URL') is None:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
-else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SQLALCHEMY_ECHO'] = True
-
-db = SQLAlchemy(app)
-class User(db.Model):
-    __tablename__ = 'user'
-
-    id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String, unique=True)
-    fullname = db.Column(db.String, nullable=True)   
-    password = db.Column(db.String) 
-    email = db.Column(db.String,  nullable=True, unique=True)       
+from app import db, models
 
 
-class Post(db.Model):
-    __tablename__ = 'post'
-
-    id = db.Column(db.Integer, primary_key=True)
-    subject = db.Column(db.String)
-    content = db.Column(db.String)
-    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    author = db.Column(db.String)
-
-
-    # We added this serialize function to be able to send JSON objects in a
-    # serializable format
-    @property
-    def serialize(self):
-
-        return {
-            'subject': self.subject,
-            'content': self.content,
-            'author': self.author,
-            'time': self.time,
-        } 
-db.create_all()
 SECRET = 'mADnaXoaj'
-
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 PASS_RE = re.compile(r"^.{3,20}$")
 EMAIL_RE = re.compile(r"^[\S]+@[\S]+.[\S]+$")
@@ -105,16 +62,22 @@ def loggedUser():
 	if cookie:
 		cookie_value = check_secure_val(cookie)
 		if cookie_value:
-			user = User.query.filter_by(id = cookie_value).one()
+			user = models.User.query.filter_by(id = cookie_value).one()
 	return user
+
+
+@app.template_filter('format')
+def time_format(value, format='%d-%m-%Y / %H:%M'):
+    return value.strftime(format)
+
 
 @app.route('/')
 @app.route('/page/<int:page>/')
 def frontPage(page = 1):
 	logged_in = loggedIn()
 	user = loggedUser()
-	posts = Post.query.order_by(Post.time.desc()).paginate(page, 8, False)
-	if logged_in:		
+	posts = models.Post.query.order_by(models.Post.time.desc()).paginate(page, 8, False)
+	if logged_in:       
 		return render_template(
 			'front.html', posts=posts, logged_in=logged_in, user=user)
 	else:
@@ -124,7 +87,7 @@ def frontPage(page = 1):
 @app.route('/JSON/')
 @app.route('/JSON/<int:page>/')
 def frontPageJSON( page = 1):
-	posts = Post.query.order_by(Post.time.desc()).paginate(page, 10, False).items
+	posts = models.Post.query.order_by(models.Post.time.desc()).paginate(page, 10, False).items
 	return jsonify([i.serialize for i in posts])      
 
 
@@ -134,7 +97,7 @@ def newPost():
 	user = loggedUser()
 	if logged_in:
 		if request.method == 'POST':
-			newPost = Post(subject=request.form['subject'], content=request.form[
+			newPost = models.Post(subject=request.form['subject'], content=request.form[
 							   'content'], author=user.username)
 			db.session.add(newPost)            
 			db.session.commit()
@@ -150,7 +113,7 @@ def newPost():
 def singlePost(post_id):
 	logged_in = loggedIn()
 	user = loggedUser()
-	post = Post.query.filter_by(id = post_id).one()
+	post = models.Post.query.filter_by(id = post_id).one()
 	if logged_in:     
 		return render_template(
 			'success.html', post=post, logged_in=logged_in, user=user)
@@ -190,13 +153,13 @@ def signUp():
 				return render_template('signup.html', fullname = name_var, username= username_var, email= email_var, error_email = "Email is not correct.")
 			else:
 
-				if User.query.filter_by(username=username_var).all() != []:
+				if models.User.query.filter_by(username=username_var).all() != []:
 					return render_template('signup.html', fullname = name_var, username= username_var, email= email_var, error_user = "Username exists")
 								  
 				else:
 					secure_pass = make_pw_hash(password_var)                    
-					newUser = User(username = username_var, fullname = name_var, password = secure_pass, email = email_var)
-					db.session.add(newUser)					
+					newUser = models.User(username = username_var, fullname = name_var, password = secure_pass, email = email_var)
+					db.session.add(newUser)                 
 					db.session.commit()
 					cookie_val = make_secure_val(str(newUser.id))
 					response = redirect("/")
@@ -228,7 +191,7 @@ def signIn():
 				return render_template('login.html', username= username_var, error_pass = "enter password")
 
 			else:
-				user = User.query.filter_by(username=username_var).one()
+				user = models.User.query.filter_by(username=username_var).one()
 				if  not user:
 					return render_template('login.html', error_user = "Username not exists")
 								  
@@ -260,15 +223,11 @@ def LogOut():
 def userPage(username, page=1):
 	logged_in = loggedIn()
 	user = loggedUser()
-	posts = Post.query.filter_by(author = username).order_by(Post.time.desc()).paginate(page, 8, False)
-	person = User.query.filter_by(username = username).one()	
+	posts = models.Post.query.filter_by(author = username).order_by(models.Post.time.desc()).paginate(page, 8, False)
+	person = models.User.query.filter_by(username = username).one()    
 	if logged_in:     
 		return render_template(
 			'userpage.html', posts=posts, logged_in=logged_in, user=user, person=person)
 	else:
 		return render_template(
 			'userpage.html', posts=posts, logged_in=logged_in, person=person)
-
-if __name__ == '__main__':
-	app.secret_key = 'super_secret_key'
-	app.run(debug=True)

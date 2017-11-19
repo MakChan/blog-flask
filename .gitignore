@@ -1,0 +1,4 @@
+VENV
+app.db
+*.pyc
+*.pyo

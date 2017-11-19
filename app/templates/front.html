@@ -24,7 +24,7 @@
 	              	{% if logged_in == True %}
 
 	                <li><a href="/newpost">New Post</a></li>
-	                <li><a href="{{  url_for('userPage', username=user.username) }}">{{ user.fullname }}</a></li>
+	                <li><a href="{{  url_for('userPage', username=user.username) }}">{{ user.fullname }}</a></li>               
 	                <li><a href="/logout">Log out</a></li>	 
 
 	              	{% else %}
@@ -39,14 +39,6 @@
 	      </div>
 	    </div>
 
-    <div class="blog-header">
-      <div class="container">
-        <h1 class="blog-title">{{ person.username }}</h1>
-        <p class="lead blog-description">all posts of {{person.fullname}}</p>
-      </div>
-    </div>
-
-
 
 
     <div class="container wrapper">
@@ -54,29 +46,44 @@
     <div class="row">
 
         <div class="col-sm-8 blog-main">
+
 			{% for post in posts.items %}
 				<div class="blog-post">
-					<h2 class="blog-post-title">{{post.subject}}</h2>
-					<div class="blog-post-meta">{{post.time}}</div>		
+					<h2 class="blog-post-title">{{post.subject}}
+						<a href="{{  url_for('singlePost', post_id=post.id) }}"> 
+							<i class="material-icons">open_in_new</i>
+						</a>
+					</h2>
+
+					<div class="blog-post-meta">{{post.time | format}}  by 
+						<a href="{{  url_for('userPage', username=post.author) }}"> {{post.author}} </a>
+					</div>
 					<pre>{{post.content}}</pre>
 			
 				</div>
 			{% endfor %}
 
-         	<nav>
+         <nav>
 	            <ul class="pager">
 	            {% if posts.has_prev %}
-	                <li><a href="{{ url_for('userPage', username=person.username, page=posts.prev_num) }}">Previous</a></li>        
+	                <li><a href="{{ url_for('frontPage', page=posts.prev_num) }}">Previous</a></li>        
 	            {% endif %}  
 
 	            {% if posts.has_next %}
-	              <li><a href="{{ url_for('userPage', username=person.username, page=posts.next_num) }}">Next</a></li>
+	              <li><a href="{{ url_for('frontPage', page=posts.next_num) }}">Next</a></li>
 	            {% endif %} 	              
 	            </ul>
-	         </nav> 
+	          </nav> 
 
          </div>
 
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+            <div class="sidebar-module sidebar-module-inset">
+	            <h4>About</h4>
+	            <p>A free space to post your views on ongoing events and other things that you wish to share.</p>				
+            </div>
+        </div>
     </div>
     </div>
+	</div>
 {% endblock %}

@@ -40,7 +40,7 @@ Follow this guide to setup this project on your local machine.
    
     `python blog.py`
 
-6. Open the browser and got to the following link.
+6. Open the browser and go to to the following link.
 
     `localhost:5000`
 
@@ -49,10 +49,10 @@ Follow this guide to setup this project on your local machine.
 
 
 ### Roadmap :rocket:
-* Admin panel    
-* Edit posts
+* Upvote/Downvote
+* Edit posts functionality
 * Hashtags 
 * Comments  
-* Upvote/Downvote
 * Follow other users
 * Personalised feeds
+* OAuth Authentication
